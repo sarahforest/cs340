@@ -15,7 +15,12 @@
   "author": "Sarah Forest and Eliza Nip",
   "license": "ISC",
   "dependencies": {
-    "angular": "^1.7.8"
+    "angular": "^1.7.8",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-session": "^1.17.0",
+    "mysql": "^2.17.1"
   },
   "devDependencies": {
     "eslint": "^6.5.1",
