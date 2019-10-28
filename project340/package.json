@@ -1,33 +1,18 @@
 {
-  "name": "package",
+  "name": "hello-world",
   "version": "1.0.0",
-  "description": "Project CS340",
-  "main": "script.js",
+  "description": "Hello world with express and node.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "standard": {
-    "globals": [
-      "angular"
-    ]
-  },
-  "author": "Sarah Forest and Eliza Nip",
+  "author": "OSU",
   "license": "ISC",
   "dependencies": {
-    "angular": "^1.7.8",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-handlebars": "^3.1.0",
-    "express-session": "^1.17.0",
-    "mysql": "^2.17.1"
-  },
-  "devDependencies": {
-    "eslint": "^6.5.1",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "body-parser": "^1.13.3",
+    "express": "^4.13.2",
+    "express-handlebars": "^2.0.1",
+    "express-session": "^1.11.3",
+    "mysql": "^2.8.0"
   }
 }
