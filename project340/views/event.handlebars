@@ -1,7 +1,7 @@
- <div class="item group">
+<div class="item group">
     <h3>Your Upcoming Events</h3>
     <ul>
-      <li>Event Name: <i>populate event name from the accounts table</i></li>
+      <li>Event Name: <i>populate event name from the events table</i></li>
       <li>Event Date/Time: <i>populate date/time from the events table</i></li>
       <li>Event Address: <i>populate event address from the events table</i></li>
       <li>Total Number of Attendees: <i>populate how many people are attending based on event_attendees table</i>
@@ -21,4 +21,30 @@
         </ul>
       </li>
     </ul>
+    <div id="submit-event" class="item group">
+    <h3>Add an event</h3>
+    <form id="eventSub" action='/add-new-event'>
+      <div class="field">
+        <input name="name" placeholder="Event Name *" id="name" type="text" required/>
+      </div>
+      <div class="field">
+      <label>Date and Time of Event *</label>
+        <input name="date_time" id="date_time" type="datetime-local" required/>
+      </div>
+            <div class="field">
+        <input name="event_street" placeholder="Event Street *" id="street" type="text" required/>
+      </div>
+      <div class="field">
+        <input name="event_city" placeholder="Event City *" id="city" type="text" required/>
+      </div>
+      <div class="field">
+        <input name="event_state" placeholder="Event State *" id="state" type="text" required/>
+      </div>
+            <div class="field">
+        <input name="event_zip_code" placeholder="Event Zip Code *" id="zip" type="number" required/>
+      </div>
+      <button class="button button-block" id="submitEvent">Add Event</button>
+    </form>
+  </div>
+
   </div>

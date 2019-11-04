@@ -223,3 +223,9 @@ body .item.group ul li ul.interests {
     white-space: nowrap;
     text-transform: capitalize; 
 }
+
+#submit-event {
+    padding: 1rem 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
