@@ -1,45 +1,33 @@
 
-  <div class="form">
+<div class="form">
     <div class="tab-content">
       <div id="signup">
-        <h1>Sign Up for Free</h1>   
-        <form action="/signup" method="post">
+        <h1>Sign Up for Free</h1>
+        <form action="/add-user" method="post">
           <div class="top-row">
             <div class="field">
-              <input placeholder="First Name *" id="fname" type="text" required/>
+              <input name="first_name" placeholder="First Name *" id="fname" type="text" required/>
             </div>
             <div class="field">
-              <input placeholder="Last Name *" id="lname" type="text" required/>
+              <input name="last_name" placeholder="Last Name *" id="lname" type="text" required/>
             </div>
           </div>
           <div class="field">
             <label>Select Interests *</label>
-            <select id="interests" multiple class="selectOptions" required>
-              <optgroup label="SPORTS">
-                <option value="running">Running</option>
-                <option value="tennis">Tennis</option>
-                <option value="bicycling">Bicycling</option>
-                <option value="frisbee">Frisbee</option>
-                <option value="golf">Golf</option>
-              </optgroup>
-              <optgroup label="TECHNOLOGY">
-                <option value="artificialintelligence">Artificial Intelligence</option>
-                <option value="websitedesign">Website Design</option>
-                <option value="photography">Photography</option>
-                <option value="animation">Animation</option>
-                <option value="blogging">Blogging</option>
-              </optgroup>
-              <optgroup label="VOLUNTEER">
-                <option value="habitatforhumanity">Habitat For Humanity</option>
-                <option value="bigbrotherbigsisters">Big Brothers Big Sisters</option>
-                <option value="animalrescueshelters">Animal Rescue Shelters</option>
-                <option value="ymca">YMCA</option>
-                <option value="redcross">Red Cross</option>
-              </optgroup>
+            <select name="interest_name" id="interests" multiple class="selectOptions" required>
+              {{#each groups}}
+                <optgroup label={{group_name}}>
+                    {{#each results}}
+                    {{#ifCond ../group_name '==' interest_groups}}
+                    <option value={{name}}>{{replaceUnderscore name}}</option>
+                    {{/ifCond}}
+                    {{/each}}
+                </optgroup>
+                {{/each}}
             </select>
           </div>
           <div class="field">
-            <select id="social" class="socialOptions" required>
+            <select name="social_media_account" id="social" class="socialOptions" required>
               <option value="" selected>Choose other social media account *</option>
               <option value="facebook">Facebook</option>
               <option value="instagram">Instagram</option>
@@ -50,107 +38,29 @@
             </select>
           </div>
           <div class="field">
-            <select id="gender" class="socialOptions" required>
+            <select name="gender" id="gender" class="socialOptions" required>
               <option value="" selected>Select Gender *</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
             </select>
           </div>
           <div class="top-row">
             <div class="field">
-              <input placeholder="Email *" id="email_address" type="email" required/>
-            </div>   
+              <input name="email" placeholder="Email *" id="email_address" type="email" required/>
+            </div>
             <div class="field">
-              <input placeholder="Password *" id="pword" type="password" required/>
+              <input name="password" placeholder="Password *" id="pword" type="password" required/>
             </div>
           </div>
           <div class="field">
-            <input placeholder="Zip Code *" id="zipcode" type="number" required/>
+            <input name="zip_code" placeholder="Zip Code *" id="zipcode" type="number" required/>
           </div>
           <div class="field">
-           <label>Birthday *</label> <input placeholder="MM/DD/YYYY *" id="birthdate" type="date" required/>
+           <label>Birthday *</label> <input name="birthdate" placeholder="MM/DD/YYYY *" id="birthdate" type="date" required/>
           </div>
-          <button type="submit" class="button button-block">Get Started</button>
-        </form>
-      </div>
-      <div id="login">   
-        <h1>Welcome Back!</h1>
-        <form action="/login" method="post">
-          <div class="field">
-            <input placeholder="Email *" id="getEmail" type="email" required />
-          </div>
-          <div class="field">
-            <input placeholder="Password" id="getPassword" type="password" required/>
-          </div>
-          <button class="button button-block">Log In</button>   
-        </form>
-      </div>
+            <input class="button button-block" type="submit" value="Submit" /> 
+          </form>
+        </div>
     </div>
-  </div>
-  <div class="item group">
-    <h3>User Profile</h3>
-    <ul>
-      <li>Email Address: <i>populate user email from the accounts table</i></li>
-      <li>Social Media Network: <i>populate selection from the accounts table</i></li>
-      <li>Birth Date: <i>populate user birthday from the accounts table</i></li>
-      <li>Gender: <i>populate user gender from the accounts table</i></li>
-      <li>Interests: <i>populate interests list from the accounts_interests table</i></li>
-      <li>Zip Code: <i>populate user zip code from the accounts table</i></li>
-      <li>Number of Followers: <i>populate how many people user follows based on count from followers table</i></li>
-    </ul>
-  </div>
-  <div class="item group">
-    <h3>Your Upcoming Events</h3>
-    <ul>
-      <li>Event Name: <i>populate event name from the accounts table</i></li>
-      <li>Event Date/Time: <i>populate date/time from the events table</i></li>
-      <li>Event Address: <i>populate event address from the events table</i></li>
-      <li>Total Number of Attendees: <i>populate how many people are attending based on event_attendees table</i>
-        <ul>
-          <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button>
-          </li>
-          <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button></li>
-          </li>
-          <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button></li>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-  <div class="item group">
-    <h3>Your Past Events</h3>
-    <ul>
-      <li>Event Name: <i>populate event name from the accounts table</i></li>
-      <li>Event Date/Time: <i>populate date/time from the events table</i></li>
-      <li>Event Address: <i>populate event address from the events table</i></li>
-      <button class="button button-review" id="review" ng-click="showReviewForm()" >Leave a Review</button>
-    </ul>
-  </div>
-  <div id="submit-review" class="item group" ng-show="isDisplayed">
-    <h3>Submit A Review For <i>event name populated here from the events table</i></h3>
-    <form id="reviewSub" action='submit-review'>
-      <div class="field">
-        <select id="rating" class="socialOptions" required>
-          <option value="" selected>Select Rating (1:Lowest, 5: Highest) *</option>
-          <option value="1">1</option>
-          <option value="2">2</option>        
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Comments</label>
-        <textarea id="comments" rows="5" required></textarea>
-      </div>
-      <button class="button button-block" id="submitReview">Submit Review</button>
-    </form>
-  </div>
-</div> 
 </div>
+

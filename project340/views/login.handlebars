@@ -1,0 +1,19 @@
+
+<div class="form">
+    <div id="login">
+        <h1>Welcome Back!</h1>
+        {{#if errors}}
+         <div id='danger'>{{errors}}</div>
+        {{/if}}
+        <form action="/get-user" method="post">
+          <div class="field">
+            <input name="email" placeholder="Email *" id="getEmail" type="email" required />
+          </div>
+          <div class="field">
+            <input name="password" placeholder="Password" id="getPassword" type="password" required/>
+          </div>
+          <input class="button button-block" type="submit" value="Log In">
+     </form>
+      </div>
+    </div>
+
