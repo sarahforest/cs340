@@ -1,10 +1,12 @@
-<div class="item group">
+ <div class="item group">
     <h3>Your Upcoming Events</h3>
     <ul>
-      <li>Event Name: <i>populate event name from the events table</i></li>
-      <li>Event Date/Time: <i>populate date/time from the events table</i></li>
-      <li>Event Address: <i>populate event address from the events table</i></li>
-      <li>Total Number of Attendees: <i>populate how many people are attending based on event_attendees table</i>
+    {{#each userEvents}}
+    {{#ifCond this.is_past '==' 0}}
+      <li>Event Name: {{this.name}}</li>
+      <li>Event Date/Time: {{this.date_time}}</li>
+      <li>Event Address: {{this.event_street}}, {{this.event_city}}, {{this.event_state}}, {{this.event_zip_code}}</li>
+      <li>Total Number of Attendees: {{this.numAttendees}}
         <ul>
           <li>
             <span><i>Populate Name based on event_attendees table</i></span>
@@ -20,7 +22,10 @@
           </li>
         </ul>
       </li>
+      {{/ifCond}}
+      {{/each}}
     </ul>
+    <hr/>
     <div id="submit-event" class="item group">
     <h3>Add an event</h3>
     <form id="eventSub" action='/add-new-event'>
@@ -46,5 +51,14 @@
       <button class="button button-block" id="submitEvent">Add Event</button>
     </form>
   </div>
-
-  </div>
+  <hr/>
+  <h3>Other Upcoming Events</h3>
+    <ul>
+    {{#each otherEvents}}
+      <li>Event Name: {{this.name}}</li>
+      <li>Event Date/Time: {{this.date_time}}</li>
+      <li>Event Address: {{this.event_street}}, {{this.event_city}}, {{this.event_state}}, {{this.event_zip_code}}</li>
+       <button class="button button-block" id="attendEvent">Attend Event</button>
+      {{/each}}
+    </ul>
+</div>

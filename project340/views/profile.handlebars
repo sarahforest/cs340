@@ -1,6 +1,12 @@
 <div class="item group">
     <h3>User Profile</h3>
     <ul>
+    <form method="post" action="/update-name">
+    <input type="hidden" name="update_userId" value={{{results.id}}} />
+      <li>First Name: <input name="update_firstName" type="text" value={{{results.first_name}}} /></li>
+      <li>Last Name: <input name="update_lastName" type="text" value={{{results.last_name}}} /></li>
+      <input class="button button-block" type="submit" value="Update Name" />
+      </form>
       <li>Email Address: {{{results.email}}}</li>
       <li>Social Media Network: {{{results.social_media_account}}}</li>
       <li>Birth Date: {{{results.birthdate}}}</li>
