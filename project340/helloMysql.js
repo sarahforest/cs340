@@ -51,6 +51,7 @@
 
   },
     replaceUnderscore: function(str) {
+      if (str)
      return str.replace(/_/g, ' ');
    }
   },
@@ -62,7 +63,7 @@
   app.use(bodyParser.urlencoded({extended:true}));
 
   app.set('view engine', 'handlebars');
-  app.set('port', 3065);
+  app.set('port', 3075);
 
 
   function getInterests(res,mysql,context,complete) {
@@ -279,76 +280,78 @@
 
   function getOtherEvents(res,mysql,context,complete,req) {
     var sess=req.session;
-    var dateNow = new Date();
-    mysql.pool.query("SELECT * FROM events e where date_time > CURRENT_TIMESTAMP", function(error,results,fields) {
+   
+    mysql.pool.query("(SELECT e.* FROM events e LEFT JOIN event_attendees ea ON e.id=ea.event_id WHERE e.id NOT IN (SELECT event_attendees.event_id FROM event_attendees WHERE attendee_id =" + mysql.pool.escape(req.session.userid) + ") AND e.date_time > CURRENT_TIMESTAMP) UNION (SELECT e.* FROM events e LEFT JOIN event_attendees ea ON e.id=ea.event_id WHERE e.id NOT IN (SELECT event_attendees.event_id FROM event_attendees WHERE attendee_id =" + mysql.pool.escape(req.session.userid) + ") AND e.date_time > CURRENT_TIMESTAMP)", function(error,results,fields) {
            if(error){
                   res.write(JSON.stringify(error));
                   res.end();
               }
 
             //  console.log('Results after getOther events is ', results);
-              context.allEventsFuture = results;
+              context.otherEvents = results;
             
               complete();
           });
   }
 
-  function getAttendeeID(res,mysql,context,complete,req) {
-   // console.log('req is ', req);
-    console.log("All future events ids is ... ")
-    var arrayFuture = [];
-    context.allEventsFuture.forEach(function(element) {
-      arrayFuture.push(element.id)
-    })
-    console.log(arrayFuture);
 
-    console.log("All user events ids is ... ")
-    var arrayUser = [];
-    context.userEvents.forEach(function(element) {
-      arrayUser.push(element.id)
-    })
-    console.log(arrayUser);
-
-    let difference = arrayFuture.filter(x => !arrayUser.includes(x));
-    console.log('diff is ', difference);
-
-    difference.forEach(function(ele) {
-      mysql.pool.query("SELECT * from events where id=" + mysql.pool.escape(ele), function(error,results,fields) {
-           if(error){
-                  res.write(JSON.stringify(error));
-                  res.end();
-              }
-             // console.log('element.id is ', element.id);
-              console.log('results is ', results);
-              //context.numAttendees  = results;
-             context.otherEvents.push(results);
-            
-          });
-    });
-
-    complete();
-  }
 
   function getAttendeesNames(res,mysql,context,complete,req) {
    // console.log('req is ', req);
     var sess = req.session;
     context.userEvents.forEach(function (element) {
-        mysql.pool.query("SELECT accounts.id, accounts.first_name, accounts.last_name, event_attendees.is_host from accounts left join event_attendees on event_attendees.attendee_id=accounts.id WHERE event_id=" + mysql.pool.escape(element.id), function(error,results,fields) {
+        mysql.pool.query("SELECT accounts.id, accounts.first_name, accounts.last_name, event_attendees.is_host from accounts left join event_attendees on event_attendees.attendee_id=accounts.id WHERE event_id=" + mysql.pool.escape(element.id), function(error,results1,fields) {
            if(error){
                   res.write(JSON.stringify(error));
                   res.end();
               }
-             // console.log('element.id is ', element.id);
-              console.log('results is ', results);
-              //context.numAttendees  = results;
+             
+              //console.log('results is ', results1);
               element.userId = sess.userid;
-              element.attendees = results;
-              console.log('context get attendees name', context);
-            
+              element.attendees = results1;
+           
+             // console.log('context get attendees name', context);
+
+               mysql.pool.query("SELECT follows_id from followers WHERE account_id=" + mysql.pool.escape(sess.userid), function(error,results,fields) {
+                  if(error){
+                    res.write(JSON.stringify(error));
+                    res.end();
+                  }
+                  // console.log('\n\n\n\nresults of followers ', results);
+                  element.followers = results;
+                  arr = [];
+                  results.forEach(function (obj) {
+                    arr.push(obj.follows_id)
+                  })
+
+
+                  element.attendees.forEach(function (attendee) {
+                    //console.log(arr.includes(attendee.id));
+                
+
+                    if (!arr.includes(attendee.id)) {
+                      attendee.can_follow = 1;
+                    } else if (attendee.id == req.session.userid) {
+                      attendee.can_follow = 0;
+                    } else {
+                      attendee.can_follow = 0;
+                    }
+                    attendee.userId = req.session.userid;
+                    attendee.eventId = element.id;
+                    //console.log('attendee is ', attendee);
+                  })
+
+
+                  
+              
+             });
           });
     });
 
+    setTimeout(function () {
     complete();
+}, 1000); 
+    
   }
 
 
@@ -370,13 +373,90 @@
     complete();
   }
 
+    app.post('/add-new-event',function(req,res) {
+
+         mysql.pool.query("INSERT INTO events (name, date_time, event_street, event_city, event_state, event_zip_code) VALUES (?,?,?,?,?,?)",
+          [req.body.name, req.body.date_time, req.body.event_street, req.body.event_city, req.body.event_state, req.body.event_zip_code],
+          function(error,results,fields) {
+           if(error){
+                  res.write(JSON.stringify(error));
+                  res.end();
+              }
+             // console.log('element.id is ', element.id);
+             var eventId = results.insertId;
+             mysql.pool.query("INSERT INTO event_attendees (event_id, attendee_id, is_host) VALUES (?,?,?)",
+              [eventId, req.session.userid, "1"],
+              function(error,results,fields) {
+                if(error){
+                  res.write(JSON.stringify(error));
+                  res.end();
+              }
+              res.redirect('/event');
+               });
+            
+          });
+  
+  });
+
+
+  app.post('/remove-attendee',function(req,res) {
+
+         mysql.pool.query("DELETE from event_attendees WHERE event_id= ? AND attendee_id = ?",
+          [req.body.event_id, req.body.attendee_id],
+          function(error,results,fields) {
+           if(error){
+                  res.write(JSON.stringify(error));
+                  res.end();
+              }
+          });
+    res.redirect('/event');
+  });
+
+    app.post('/follow',function(req,res) {
+         mysql.pool.query("INSERT INTO followers (account_id,follows_id) VALUES (?,?)",
+          [req.session.userid, req.body.follows_id],
+          function(error,results,fields) {
+           if(error){
+                  res.write(JSON.stringify(error));
+                  res.end();
+              }
+          });
+    res.redirect('/event');
+  });
+
+        app.post('/unfollow',function(req,res) {
+         mysql.pool.query("DELETE FROM followers WHERE account_id=? AND follows_id=?",
+          [req.session.userid, req.body.follows_id],
+          function(error,results,fields) {
+           if(error){
+                  res.write(JSON.stringify(error));
+                  res.end();
+              }
+          });
+    res.redirect('/event');
+  });
+
+
+  app.post('/attend-event',function(req,res) {
+    mysql.pool.query("INSERT INTO event_attendees (event_id, attendee_id, is_host) VALUES (?,?,?)",
+      [req.body.id, req.session.userid, "0"],
+      function(error,results,fields) {
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        res.redirect('/event');
+      });      
+  });
+  
+
   app.get('/event',auth,function(req,res){
   var callbackCount = 0;  
   var context = {};
   context.userEvents = {};
   context.userEvents.attendees = [];
-  context.allEventsFuture = {};
-  context.allEventsFuture.attendees = [];
+  context.userEvents.followers = [];
+
   context.otherEvents = [];
   getUserEvents(res, mysql, context, complete, req);
 
@@ -390,14 +470,10 @@
               } else if (callbackCount == 3) {
                 getAttendeesNames(res,mysql,context,complete,req)
               } else if (callbackCount == 4) {
+                //console.log('user events after attendees names is ', context.userEvents);
                 getOtherEvents(res,mysql,context,complete,req)
-              } else if (callbackCount == 5) {
-                
-                 setTimeout(function(){getAttendeeID(res,mysql,context,complete,req)},2000)
-              }  /*else if (callbackCount == 6) {
-                setTimeout(function(){getEventsWithoutAttendee(res,mysql,context,complete,req)},3000);
-              }*/ else if (callbackCount >= 6){
-                console.log('context.otherEvents',context.otherEvents);
+              } else if (callbackCount >= 5){
+               // console.log('context.otherEvents',context.otherEvents);
                   res.render('event', context);
               }
 
@@ -533,5 +609,6 @@
   app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
   });
+
 
 

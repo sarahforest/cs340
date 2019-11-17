@@ -1,4 +1,4 @@
- <div class="item group">
+<div class="item group">
     <h3>Your Upcoming Events</h3>
     <ul>
     {{#each userEvents}}
@@ -8,18 +8,14 @@
       <li>Event Address: {{this.event_street}}, {{this.event_city}}, {{this.event_state}}, {{this.event_zip_code}}</li>
       <li>Total Number of Attendees: {{this.numAttendees}}
         <ul>
+        {{#each this.attendees}}
           <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button>
+            <span>{{this.first_name}} {{this.last_name}}  {{#ifCond this.is_host '==' 1}} - HOST{{/ifCond}}</span><br/>
+            
+            {{#ifCond this.is_host '!=' 1}}<form method="post" action="/remove-attendee"><input type="hidden" value={{this.eventId}} name="event_id"/><input type="hidden" value={{this.id}} name="attendee_id"/><button class="button button-remove" id="removeAttendee">Remove Attendee</button></form>{{/ifCond}}{{#ifCond this.id '!=' this.userId}}{{#ifCond this.can_follow '==' 1}}<form method="post" action="/follow"><input type="hidden" value={{this.id}} name="follows_id"/><button class="button button-follow" id="follow">Follow</button></form>{{/ifCond}}{{#ifCond this.can_follow '==' 0}}<form method="post" action="/unfollow"><input type="hidden" value={{this.id}} name="follows_id"/><button class="button button-follow" id="follow">Unfollow</button></form>{{/ifCond}}{{/ifCond}}
           </li>
-          <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button></li>
           </li>
-          <li>
-            <span><i>Populate Name based on event_attendees table</i></span>
-            <button class="button button-remove" id="removeAttendee">Remove Attendee</button><button class="button button-follow" id="follow">Follow</button></li>
-          </li>
+          {{/each}}
         </ul>
       </li>
       {{/ifCond}}
@@ -28,7 +24,7 @@
     <hr/>
     <div id="submit-event" class="item group">
     <h3>Add an event</h3>
-    <form id="eventSub" action='/add-new-event'>
+    <form method="post" id="eventSub" action='/add-new-event'>
       <div class="field">
         <input name="name" placeholder="Event Name *" id="name" type="text" required/>
       </div>
@@ -58,7 +54,10 @@
       <li>Event Name: {{this.name}}</li>
       <li>Event Date/Time: {{this.date_time}}</li>
       <li>Event Address: {{this.event_street}}, {{this.event_city}}, {{this.event_state}}, {{this.event_zip_code}}</li>
-       <button class="button button-block" id="attendEvent">Attend Event</button>
+      <form method="post" action="/attend-event">
+      <input type="hidden" name="id" value={{this.id}}/>
+      <button class="button button-block" id="attendEvent">Attend Event</button>
+       </form>
       {{/each}}
     </ul>
 </div>
