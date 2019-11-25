@@ -13,12 +13,17 @@
       <li>Gender: {{{results.gender}}}</li>
       <li>Interests:
       <ul class="interests">
+      {{#ifCond results.interests '!=' '[]'}}
           {{#each results.interests}}
           <li>{{replaceUnderscore this}}</li>
           {{/each}}
+          {{else}}
+          <li>You didn't choose any interests</li>
+          {{/ifCond}}
       </ul>
       </li>
       <li>Zip Code: {{{results.zip_code}}}</li>
       <li>Number of Followers: {{{results.followers}}}</li>
     </ul>
   </div>
+

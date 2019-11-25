@@ -63,7 +63,7 @@
   app.use(bodyParser.urlencoded({extended:true}));
 
   app.set('view engine', 'handlebars');
-  app.set('port', 3075);
+  app.set('port', 3085);
 
 
   function getInterests(res,mysql,context,complete) {
@@ -154,7 +154,8 @@
             res.write(JSON.stringify(err));
             res.end();
           } else {
-          var interest_id=result[0].id;
+          if (result[0]) {
+             var interest_id=result[0].id;
          // console.log('interest_id is ', interest_id);
           mysql.pool.query("INSERT INTO accounts_interests (account_id, interest_id) VALUES (?,?)",
           [accountId, interest_id],
@@ -167,6 +168,7 @@
            console.log("success adding new account_interest)");
            }
           });
+          }
 
           }
          });
@@ -609,6 +611,7 @@
   app.listen(app.get('port'), function(){
     console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
   });
+
 
 
 

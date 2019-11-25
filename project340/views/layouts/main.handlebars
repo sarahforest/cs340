@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
 <head>
@@ -6,18 +7,23 @@
 
 </head>
 <body>
-<div class ="navarionBar">
-
-  <a href="/profile">Profile</a>
-  <a href="/event">Event</a>
-  <a href="/review">Review</a>
-
-  <a href="/">Sign Up</a>
-  <a href="/login">Log In</a>
-
-
-</div>
-
+	<div id="header">
+		<div id="logo">
+			<a href="/"><img src="/images/join-us-new.png"></a>
+		</div>
+		<div id="nav" class ="navarionBar">
+			<ul>
+				<li> <a href="/">Sign Up</a></li>
+				<li><a href="/login">Log In</a></li>
+				<li><a href="/profile">Profile</a></li>
+				<li><a href="/event">Event</a></li>
+				<li> <a href="/review">Review Past Events</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="wrapper">
         {{{body}}}
+ 	</div>
 </body>
 </html>
+

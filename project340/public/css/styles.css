@@ -21,7 +21,36 @@ html {
 body {
   background:#c1bdba;
   font-family: 'Titillium Web', sans-serif;
+  margin: 0;
 }
+
+#wrapper {
+  margin-top: 120px;
+}
+
+#header {
+    background: #13232f;
+    min-height: 6rem;
+    width: 100%;
+    box-shadow: 2px 2px 2px #000;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+}
+
+#nav ul li a {
+  text-decoration: none;
+  color: white;
+}
+
+#nav ul li a:hover {
+  border-bottom: 2px solid white;
+}
+
+#nav ul {
+  list-style-type: none;
+}
+
 
 a {
   text-decoration:none;
@@ -29,22 +58,11 @@ a {
   transition:.5s ease;
 }
 
-.navarionBar {
-	background: #13232f;
-	max-width:2000px;
-  margin:15px auto;
-	font-size: 30px;
-	text-align: center;
-}
 
-.navarionBar a {
-  margin: 0 10px;    
-}
 .socialOptions {
-  background: transparent;
-  color: #fff;
+  background: white;
+  color: #13232f;
   font-size: 15px;
-
   border-radius: 0;
   height: 2.5rem;
 }
@@ -113,10 +131,9 @@ label {
 
 .selectOptions {
   width: 100%;
-  color: #fff;
-
+  color: #13232f;
   border: 1px solid #fff;
-  background:transparent;
+  background:white;
 }
 
 input, textarea {
@@ -185,12 +202,13 @@ input, textarea {
 
 #signup, #login {
   width: 48%;
-  float: left;
+  /*float: left;*/
+  margin: 0 auto;
 }
 
-#login {
+/* #login {
   margin-left: 4%;
-}
+} */
 
 optgroup {
   text-transform: uppercase;
@@ -229,3 +247,61 @@ body .item.group ul li ul.interests {
     max-width: 600px;
     margin: 0 auto;
 }
+
+
+/* Media Query */
+
+@media (min-width: 768px) {
+
+#nav ul li {
+   display: block;
+   float: left;
+   padding: 1rem 1rem;
+}
+
+#nav {
+  float: right;
+  margin-right: 2rem;
+}
+
+#logo {
+  float: left;
+  margin-left: 2rem;
+}
+
+#nav {
+  margin-top: 1.5rem;
+}
+
+#logo img {
+  max-height: 5rem;
+    padding: 6%;
+}
+
+}
+
+@media (max-width: 768px) {
+
+#logo {
+  width: 30%;
+  float: left;
+    
+}
+
+#logo img {
+  width: 100%;
+}
+
+#nav {
+  width: 70%;
+  float: left;
+  padding-left: 0;
+}
+
+#nav li {
+  width: 35%;
+    float: left;
+}
+
+}
+
